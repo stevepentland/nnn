@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 
-# Description: Selections are uploaded using Firefox Send
+# Description: Selections are archived into a tar file (uncompressed) and uploaded to file.io
 #              For single files:
-#              Upload to Firefox Send if ffsend is found, else
-#              Paste contents of a text a file http://ix.io
+#              Upload contents of a text file to https://0x0.st
 #              Upload a binary file to file.io
+#              Set NNN_UPLOAD_SERVICE=sendit.sh to use sendit.sh for files and selections
 #
-# Dependencies: ffsend (https://github.com/timvisee/ffsend), curl, jq, tr
+# Dependencies: curl, jq, tar, file with `--mime-type` support
 #
 # Note: Binary file set to expire after a week
 #
@@ -14,31 +14,35 @@
 # Author: Arun Prakash Jana
 
 selection=${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection}
+upload_service=${NNN_UPLOAD_SERVICE:-}
 if [ -s "$selection" ]; then
-    if type ffsend >/dev/null 2>&1; then
-      # File name will be randomized foo.tar
-      xargs -0 < "$selection" ffsend u
+    if [ "$upload_service" = sendit.sh ]; then
+        xargs -0 tar -c < "$selection" | \
+            curl -s --data-binary @- https://sendit.sh/selection.tar
     else
-      printf "ffsend is required to upload selection."
+        xargs -0 tar -c < "$selection" | \
+            curl -s -F "file=@/dev/stdin;filename=selection.tar" 'https://file.io/?expires=1w' | \
+            jq '.link' | tr -d '"'
     fi
 
     # Clear selection
     printf "-" > "$NNN_PIPE"
 else
     if [ -n "$1" ] && [ -s "$1" ]; then
-	if type ffsend >/dev/null 2>&1; then
-	    ffsend -fiq u "$1"
-	elif [ "$(mimetype --output-format %m "$1" | awk -F '/' '{print $1}')" = "text" ]; then
-	    curl -F "f:1=@$1" ix.io
-	else
-	    # Upload the file, show the download link and wait till user presses any key
-	    curl -s -F "file=@$1" https://file.io/?expires=1w | jq '.link' | tr -d '"'
-
-	    # To write download link to "$1".loc and exit
-	    # curl -s -F "file=@$1" https://file.io/?expires=1w -o `basename "$1"`.loc
-	fi
+        if [ "$upload_service" = sendit.sh ]; then
+            filename=${1##*/}
+            filename=$(printf '%s' "$filename" | jq -sRr @uri)
+            curl -s --data-binary "@$1" "https://sendit.sh/$filename"
+        elif file --mime-type "$1" | grep -q -F "text/"; then
+            curl -F "file=@$1" https://0x0.st
+        else
+            # Upload the file, show the download link and wait till user presses any key
+            curl -s -F "file=@$1" https://file.io/?expires=1w | jq '.link' | tr -d '"'
+            # To write download link to "$1".loc and exit
+            # curl -s -F "file=@$1" https://file.io/?expires=1w -o `basename "$1"`.loc
+        fi
     else
-	printf "empty file!"
+        printf "empty file!"
     fi
 fi
 

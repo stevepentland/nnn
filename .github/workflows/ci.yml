@@ -30,8 +30,9 @@ jobs:
           # see: https://github.com/actions/setup-python/issues/577
           brew update || true
           brew install llvm || true
-          brew link --overwrite python@3.11
+          # brew unlink python@3.11 && brew link python@3.11
           export PATH="/usr/local/opt/llvm/bin:$PATH"
+          export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
           export CFLAGS="$CFLAGS -Werror"
           make clean
           make
@@ -45,4 +46,15 @@ jobs:
         env:
           CC: gcc
         run: |
+          sudo apt install libreadline-dev
           make checkpatches
+  ubuntu-cppcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Static analysis with cppcheck
+        run: |
+          sudo apt install cppcheck libreadline-dev
+          cppcheck --std="c11" --error-exitcode=1 --enable=performance,portability \
+                   --force --inline-suppr --max-ctu-depth=8 -j"$(nproc)" \
+                   $(pkg-config --cflags ncurses) src/nnn.c

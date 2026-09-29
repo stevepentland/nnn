@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2014-2016, Lazaros Koromilas <lostd@2f30.org>
  * Copyright (C) 2014-2016, Dimitris Papastamos <sin@2f30.org>
- * Copyright (C) 2016-2023, Arun Prakash Jana <engineerarun@gmail.com>
+ * Copyright (C) 2016-2026, Arun Prakash Jana <engineerarun@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,12 +71,10 @@ enum action {
 	SEL_CTX2,
 	SEL_CTX3,
 	SEL_CTX4,
-#ifdef CTX8
 	SEL_CTX5,
 	SEL_CTX6,
 	SEL_CTX7,
 	SEL_CTX8,
-#endif
 	SEL_MARK,
 	SEL_BMARK,
 	SEL_FLTR,
@@ -97,7 +95,7 @@ enum action {
 	SEL_MV,
 	SEL_CPMVAS,
 	SEL_TRASH,
-	SEL_RM_ONLY,
+	SEL_RM_RF,
 	SEL_OPENWITH,
 	SEL_NEW,
 	SEL_RENAME,
@@ -115,13 +113,16 @@ enum action {
 	SEL_SESSIONS,
 	SEL_EXPORT,
 	SEL_TIMETYPE,
+	SEL_PREVIEW,
 	SEL_QUITCTX,
+	SEL_REOPENCTX,
 	SEL_QUITCD,
 	SEL_QUIT,
 	SEL_QUITERR,
 #ifndef NOMOUSE
 	SEL_CLICK,
 #endif
+	SEL_MAX,
 };
 
 /* Associate a pressed key to an action */
@@ -189,12 +190,10 @@ static struct key bindings[] = {
 	{ '2',            SEL_CTX2 },
 	{ '3',            SEL_CTX3 },
 	{ '4',            SEL_CTX4 },
-#ifdef CTX8
 	{ '5',            SEL_CTX5 },
 	{ '6',            SEL_CTX6 },
 	{ '7',            SEL_CTX7 },
 	{ '8',            SEL_CTX8 },
-#endif
 	/* Mark a path to visit later */
 	{ ',',            SEL_MARK },
 	/* Create a bookmark */
@@ -242,7 +241,7 @@ static struct key bindings[] = {
 	/* Delete from selection buffer */
 	{ 'x',            SEL_TRASH },
 	{ CONTROL('X'),   SEL_TRASH },
-	{ 'X',            SEL_RM_ONLY },
+	{ 'X',            SEL_RM_RF },
 	/* Open in a custom application */
 	{ 'o',            SEL_OPENWITH },
 	{ CONTROL('O'),   SEL_OPENWITH },
@@ -279,6 +278,10 @@ static struct key bindings[] = {
 	{ '>',            SEL_EXPORT },
 	/* Set time type */
 	{ 'T',            SEL_TIMETYPE },
+	/* Toggle preview pane */
+	{ 'P',            SEL_PREVIEW },
+	/* Reopen the last closed context */
+	{ 'R',            SEL_REOPENCTX },
 	/* Quit a context */
 	{ 'q',            SEL_QUITCTX },
 	/* Change dir on quit */

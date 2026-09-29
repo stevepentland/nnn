@@ -3,21 +3,21 @@
 <p align="center">
 <a href="https://github.com/jarun/nnn/releases/latest"><img src="https://img.shields.io/github/release/jarun/nnn.svg?maxAge=600&label=rel" alt="Latest release" /></a>
 <a href="https://repology.org/project/nnn/versions"><img src="https://repology.org/badge/tiny-repos/nnn.svg?header=repos" alt="Availability"></a>
-<a href="https://circleci.com/gh/jarun/workflows/nnn"><img src="https://img.shields.io/circleci/project/github/jarun/nnn.svg?label=circle%20ci" alt="CircleCI Status" /></a>
-<a href="https://github.com/jarun/nnn/actions"><img src="https://github.com/jarun/nnn/workflows/ci/badge.svg?branch=master" alt="GitHub CI Status" /></a>
+<a href="https://circleci.com/gh/jarun/workflows/nnn"><img src="https://img.shields.io/circleci/project/github/jarun/nnn.svg?label=CircleCI" alt="Circle CI Status" /></a>
+<a href="https://github.com/jarun/nnn/actions"><img src="https://github.com/jarun/nnn/actions/workflows/ci.yml/badge.svg?branch=master" alt="GitHub CI Status" /></a>
 <a href="https://en.wikipedia.org/wiki/Privacy-invasive_software"><img src="https://img.shields.io/badge/privacy-✓-crimson?maxAge=2592000" alt="Privacy Awareness" /></a>
 <a href="https://github.com/jarun/nnn/blob/master/LICENSE"><img src="https://img.shields.io/badge/©-BSD%202--Clause-important.svg?maxAge=2592000" alt="License" /></a>
 </p>
 
-<p align="center"><a href="http://i.imgur.com/kOld6HT.gif"><img src="https://i.imgur.com/NUsSA2u.jpg"></a></p>
+<p align="center"><a href="https://github.com/user-attachments/assets/541ca36d-ae26-49fb-97da-d1f7a12d4b9a"><img src="https://github.com/user-attachments/assets/a8ee4689-1552-4fb1-997e-b16fe8ef5086"></a></p>
 
 <h3 align="center">[<a
-href="https://github.com/jarun/nnn#features">Features</a>] [<a
-href="https://github.com/jarun/nnn#quickstart">Quickstart</a>] [<a
-href="https://github.com/jarun/nnn/tree/master/plugins#nnn-plugins">Plugins</a>] [<a
+href="https://github.com/jarun/nnn#features">Features</a>] $~~$ [<a
+href="https://github.com/jarun/nnn#quickstart">Quickstart</a>] $~~$ [<a
+href="https://github.com/jarun/nnn/tree/master/plugins#nnn-plugins">Plugins</a>] $~~$ [<a
 href="https://github.com/jarun/nnn/wiki">Wiki</a>]</h3>
 
-`nnn` (_n³_) is a full-featured terminal file manager. It's tiny, nearly 0-config and [incredibly fast](https://github.com/jarun/nnn/wiki/Performance).
+`nnn` (_n³_) is a full-featured terminal file manager. It's tiny (~150 KiB), [nearly 0-config](https://github.com/jarun/nnn#quickstart) and [incredibly fast](https://github.com/jarun/nnn/wiki/Performance).
 
 It is designed to be unobtrusive with smart workflows to match the trains of thought.
 
@@ -27,7 +27,9 @@ Independent (neo)vim plugins - [nnn.vim](https://github.com/mcchrish/nnn.vim), [
 
 Runs on the Pi, [Termux](https://www.youtube.com/embed/AbaauM7gUJw) (Android), Linux, macOS, BSD, Haiku, Cygwin, WSL, across DEs or a strictly CLI env.
 
-[_(there's more)_](https://github.com/jarun/nnn/wiki/Basic-use-cases#the_nnn-magic)
+[_(more use cases)_](https://github.com/jarun/nnn/wiki/Basic-use-cases#the_nnn-magic)
+
+<a href="https://build.demoshell.com/launch?snapshot=demoshell%2Ftui%3Annn"><img src="https://build.demoshell.com/v1/embed/badge.svg" alt="Live demo by Demoshell" align="absmiddle"></a>
 
 ## Features
 
@@ -60,6 +62,7 @@ Runs on the Pi, [Termux](https://www.youtube.com/embed/AbaauM7gUJw) (Android), L
 - Navigation
   - Filter with automatic dir entry on unique match
   - *Type-to-nav* (turbo navigation/always filter) mode
+  - Jump to an entry with visible relative offset
   - Contexts (_aka_ tabs/workspaces) with custom colors
   - Sessions, bookmarks, mark and visit a dir
   - Remote mounts (needs `sshfs`, `rclone`)
@@ -68,7 +71,7 @@ Runs on the Pi, [Termux](https://www.youtube.com/embed/AbaauM7gUJw) (Android), L
   - Proceed to next file on file open and selection
 - Search
   - Instant filtering with *search-as-you-type*
-  - Regex (POSIX/PCRE) and string (default) filters
+  - Fuzzy, regex (POSIX/PCRE2) and string (default) filters
   - Subtree search plugin to open or edit files
 - Sort
   - Ordered pure numeric names by default (visit `/proc`)
@@ -77,7 +80,8 @@ Runs on the Pi, [Termux](https://www.youtube.com/embed/AbaauM7gUJw) (Android), L
   - Reverse sort
   - Directory-specific ordering
 - Mimes
-  - Preview hovered files in FIFO-based previewer
+  - Built-in previewer for directory and text files
+  - FIFO-based previewer plugins with extensive mime support
   - Open with desktop opener or specify a custom opener
   - File-specific colors (or minimal _dirs in context color_)
   - Icons and Emojis support (customize and compile-in)
@@ -94,6 +98,7 @@ Runs on the Pi, [Termux](https://www.youtube.com/embed/AbaauM7gUJw) (Android), L
   - Batch renamer for selection or dir
   - List input stream of file paths from stdin or plugin
   - Copy (as), move (as), delete, archive, link selection
+  - Easily copy, move paths in system clipboard to current dir
   - Dir updates, notification on `cp`, `mv`, `rm` completion
   - Copy file paths to system clipboard on select
   - Launch apps, run commands, spawn a shell, toggle exe
@@ -104,23 +109,35 @@ Runs on the Pi, [Termux](https://www.youtube.com/embed/AbaauM7gUJw) (Android), L
 
 ## Quickstart
 
+### Beginners
+
+1. [Install](https://github.com/jarun/nnn/wiki/Usage#installation) `nnn`, preferably using the package manager.
+2. Run the following command to generate (and optionally add to your rc file) a shell function to start with.
+   ```sh
+   sh -c "$(curl -Ls https://raw.githubusercontent.com/jarun/nnn/master/misc/quickstart.sh)"
+   ```
+
+Use the shell function name you chose to run `nnn` with your preferred configuration.
+
+### Power users
+
 1. [Install](https://github.com/jarun/nnn/wiki/Usage) `nnn` and the dependencies you need.
-2. The desktop opener is default. Use `-e` to open text files in the terminal. Optionally [open detached](https://github.com/jarun/nnn/wiki/Basic-use-cases#detached-text).
-3. Configure [`cd` on quit](https://github.com/jarun/nnn/wiki/Basic-use-cases#configure-cd-on-quit).
-4. [Sync subshell `$PWD`](https://github.com/jarun/nnn/wiki/Basic-use-cases#sync-subshell-pwd) to `nnn`.
-5. [Install plugins](https://github.com/jarun/nnn/tree/master/plugins#installation).
-6. Use `-x` to sync selection to clipboard, show notis on `cp`, `mv`, `rm` and set xterm title.
-7. For a CLI-only environment, set [`NNN_OPENER`](https://github.com/jarun/nnn/wiki/Usage#configuration) to [`nuke`](https://github.com/jarun/nnn/blob/master/plugins/nuke). Use option `-c`.
-8. Bid `ls` goodbye! `alias ls='nnn -de'` :sunglasses:
+2. [Install plugins](https://github.com/jarun/nnn/tree/master/plugins#installation).
+3. Configure [cd on quit](https://github.com/jarun/nnn/wiki/Basic-use-cases#configure-cd-on-quit).
+4. The desktop opener is default. Use `-e` to open text files in the terminal. Optionally [open detached](https://github.com/jarun/nnn/wiki/Basic-use-cases#detached-text).
+5. In a CLI environment, set [`NNN_OPENER`](https://github.com/jarun/nnn/wiki/Usage#configuration) to [`nuke`](https://github.com/jarun/nnn/blob/master/plugins/nuke). Use option `-c`. For GUI apps, consider [xopen](https://github.com/jarun/xopen).
+6. [Sync subshell](https://github.com/jarun/nnn/wiki/Basic-use-cases#sync-subshell-pwd) `$PWD` to `nnn`.
+7. Use `-x` to sync selection to clipboard, show notis on `cp`, `mv`, `rm` and set xterm title.
+8. Bid `ls` goodbye! `alias l='nnn -dDe'` :sunglasses:
 9. Visit the [Live previews](https://github.com/jarun/nnn/wiki/Live-previews) and [Troubleshooting](https://github.com/jarun/nnn/wiki/Troubleshooting) Wiki pages.
 
 Don't memorize! Arrows, <kbd>/</kbd>, <kbd>q</kbd> suffice. <kbd>Tab</kbd> creates and/or cycles contexts. <kbd>?</kbd> lists shortcuts.
 
-[![](https://i.imgur.com/TN3xYQz.jpg)](https://www.youtube.com/embed/-knZwdd1ScU)
-
 [![Wiki](https://img.shields.io/badge/RTFM-nnn%20Wiki-important?maxAge=2592000)](https://github.com/jarun/nnn/wiki)
 
 ## Videos
+
+[![](https://github.com/user-attachments/assets/e93f7571-8b8d-4703-bef1-93fc804adf7d)](https://www.youtube.com/embed/-knZwdd1ScU)
 
 - [nnn file manager on Termux (Android)](https://www.youtube.com/embed/AbaauM7gUJw)
 - [NNN File Manager](https://www.youtube.com/embed/1QXU4XSqXNo)
@@ -152,7 +169,7 @@ Don't memorize! Arrows, <kbd>/</kbd>, <kbd>q</kbd> suffice. <kbd>Tab</kbd> creat
 
 ## Developers
 
-- [Arun Prakash Jana](https://github.com/jarun) (Copyright © 2016-2023)
+- [Arun Prakash Jana](https://github.com/jarun) (Copyright © 2016-2026)
 - [0xACE](https://github.com/0xACE)
 - [Anna Arad](https://github.com/annagrram)
 - [KlzXS](https://github.com/KlzXS)

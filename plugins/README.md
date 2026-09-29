@@ -3,6 +3,25 @@
 <p align="center"><img src="https://i.imgur.com/SpT0L2W.png" /></p>
 <p align="center"><i>read ebooks with plugin gutenread (Android)</i></p>
 
+### Table of contents
+
+- [Introduction](#introduction)
+- [List of plugins](#list-of-plugins)
+- [Installation](#installation)
+- [Configuration](#configuration)
+  - [Skip directory refresh after running a plugin](#skip-directory-refresh-after-running-a-plugin--)
+- [Running commands as plugin](#running-commands-as-plugin-)
+  - [Skip user confirmation after command execution](#skip-user-confirmation-after-command-execution-)
+  - [Run a GUI app as plugin](#run-a-gui-app-as-plugin-)
+  - [Page non-interactive command output](#page-non-interactive-command-output-)
+  - [Some useful key-command examples](#some-useful-key-command-examples)
+- [Access level of plugins](#access-level-of-plugins)
+- [Create your own plugins](#create-your-own-plugins)
+  - [Send data to `nnn`](#send-data-to-nnn)
+  - [Get notified on file hover](#get-notified-on-file-hover)
+- [Examples](#examples)
+- [Contributing plugins](#contributing-plugins)
+
 ## Introduction
 
 Plugins extend the capabilities of `nnn`. They are _executable_ scripts (or binaries) `nnn` can communicate with and trigger. This mechanism fits perfectly with the fundamental design to keep the core file manager lean and fast, by delegating repetitive (but not necessarily file manager-specific) tasks to the plugins which can be run with custom hotkeys.
@@ -13,6 +32,11 @@ Plugins extend the capabilities of `nnn`. They are _executable_ scripts (or bina
 
 | Plugin (a-z) | Description [Clears selection<sup>1</sup>] | Lang | Dependencies |
 | --- | --- | --- | --- |
+| [.cbcp](.cbcp) | **Internal**: Copy selection to system clipboard | sh | _see in-file docs_ |
+| [.nmv](.nmv) | **Internal**: Feature-rich batch renamer | bash | _see in-file docs_ |
+| [.npreview](.npreview) | **Internal**: Text-based preview handler | sh | _see in-file docs_ |
+| [.ntfy](.ntfy) | **Internal**: Notify on copy, move, remove completion | sh | _see in-file docs_ |
+| [.pluglist](.pluglist) | **Internal**: List available plugins and their installation status | sh | awk, sort |
 | [autojump](autojump) | Navigate to dir/path | sh | [jump](https://github.com/gsamokovarov/jump)/autojump/<br>zoxide/z/[z.lua](https://github.com/skywind3000/z.lua) |
 | [boom](boom) | Play random music from dir | sh | [moc](http://moc.daper.net/) |
 | [bulknew](bulknew) | Create multiple files/dirs at once | bash | sed, xargs, mktemp |
@@ -28,11 +52,13 @@ Plugins extend the capabilities of `nnn`. They are _executable_ scripts (or bina
 | [fixname](fixname) | Clean filename to be more shell-friendly [✓] | bash | sed |
 | [fzcd](fzcd) | Fuzzy search multiple dirs (or `$PWD`) and visit file | sh | fzf, (find) |
 | [fzhist](fzhist) | Fuzzy-select a cmd from history, edit in `$EDITOR` and run | sh | fzf, mktemp |
-| [fzopen](fzopen) | Fuzzy find file(s) in subtree to edit/open/pick | sh | fzf, xdg-open/open |
+| [fzopen](fzopen) | Fuzzy find file(s) in subtree to edit/open/pick | sh | fzf/skim, fd/find |
 | [fzplug](fzplug) | Fuzzy find, preview and run other plugins | sh | fzf |
 | [getplugs](getplugs) | Update plugins to installed `nnn` version | sh | curl |
 | [gitroot](gitroot) | Cd to the root of current git repo | sh | git |
 | [gpge](gpge) | Encrypt/decrypt files using GPG [✓] | sh | gpg |
+| [gpgs](gpgs) | Digitally sign files using GPG [✓] | sh | gpg |
+| [gpgv](gpgv) | Verify signature files using GPG [✓] | sh | gpg |
 | [gutenread](gutenread) | Browse, download, read from Project Gutenberg | sh | curl, unzip, w3m<br>[epr](https://github.com/wustho/epr) (optional) |
 | [gsconnect](gsconnect) | GNOME's implementation of kdeconnect [✓] | sh | gsconnect |
 | [imgresize](imgresize) | Batch resize images in dir to screen resolution | sh | [imgp](https://github.com/jarun/imgp) |
@@ -47,9 +73,9 @@ Plugins extend the capabilities of `nnn`. They are _executable_ scripts (or bina
 | [mp3conv](mp3conv) | Extract audio from multimedia as mp3 | sh | ffmpeg |
 | [mtpmount](mtpmount) | Toggle mount of MTP device (eg. Android) | sh | gvfs-mtp |
 | [nbak](nbak) | Backs up `nnn` config | sh | tar, awk, mktemp |
-| [nmount](nmount) | Toggle mount status of a device as normal user | sh | pmount (optional), udisks2 |
+| [nmount](nmount) | Toggle mount status of a device as normal user | bash | pmount (optional),<br>udisks2 |
 | [nuke](nuke) | Sample file opener (CLI-only by default) | sh | _see in-file docs_ |
-| [oldbigfile](oldbigfile) | List large files by access time | sh | find, sort |
+| [oldbigfile](oldbigfile) | List files above a min size by access time | sh | find, sort, head, numfmt (optional) |
 | [openall](openall) | Open selected files together or one by one [✓] | bash | - |
 | [organize](organize) | Auto-organize files in directories by file type [✓] | sh | file |
 | [pdfread](pdfread) | Read a PDF or text file aloud | sh | pdftotext, mpv,<br>pico2wave |
@@ -60,10 +86,12 @@ Plugins extend the capabilities of `nnn`. They are _executable_ scripts (or bina
 | [ringtone](ringtone) | Create a variable bitrate mp3 ringtone from file | sh | date, ffmpeg |
 | [rsynccp](rsynccp) | Gives copy-paste verbose progress percentage [✓] | sh | rsync |
 | [splitjoin](splitjoin) | Split file or join selection [✓] | sh | split, cat |
+| [stats](stats) | Show file stats in a pager | sh | file, stat, pager |
 | [suedit](suedit) | Edit file using superuser permissions | sh | sudoedit/sudo/doas |
+| [tnp](tnp) | Opens files in a Tmux Neovim pane (Tmux session only) | sh | tmux, nvim |
 | [togglex](togglex) | Toggle executable mode for selection [✓] | sh | chmod |
 | [umounttree](umounttree) | Unmount a remote mountpoint from within | sh | fusermount |
-| [upload](upload) | Upload to Firefox Send or ix.io (text) or file.io (bin) | sh | [ffsend](https://github.com/timvisee/ffsend), curl, jq, tr |
+| [upload](upload) | Upload text files to 0x0.st and other files to file.io or sendit.sh | sh | curl, jq, tar, file |
 | [wallpaper](wallpaper) | Set wallpaper or change colorscheme | sh | nitrogen/pywal |
 | [x2sel](x2sel) | Copy file list from system clipboard to selection | sh | _see in-file docs_ |
 | [xdgdefault](xdgdefault) | Set the default app for the hovered file type | sh | xdg-utils, fzf/dmenu |
@@ -71,24 +99,7 @@ Plugins extend the capabilities of `nnn`. They are _executable_ scripts (or bina
 Notes:
 
 1. A plugin has to explicitly request `nnn` to clear the selection e.g. after operating on the selected files.
-2. Files starting with a dot in the `plugins` directory are internal files and should not be used as plugins.
-
-### Table of contents
-
-- [Installation](#installation)
-- [Configuration](#configuration)
-  - [Skip directory refresh after running a plugin](#skip-directory-refresh-after-running-a-plugin--)
-- [Running commands as plugin](#running-commands-as-plugin-)
-  - [Skip user confirmation after command execution](#skip-user-confirmation-after-command-execution-)
-  - [Run a GUI app as plugin](#run-a-gui-app-as-plugin-)
-  - [Page non-interactive command output](#page-non-interactive-command-output-)
-  - [Some useful key-command examples](#some-useful-key-command-examples)
-- [Access level of plugins](#access-level-of-plugins)
-- [Create your own plugins](#create-your-own-plugins)
-  - [Send data to `nnn`](#send-data-to-nnn)
-  - [Get notified on file hover](#get-notified-on-file-hover)
-- [Examples](#examples)
-- [Contributing plugins](#contributing-plugins)
+2. Files starting with a dot in the `plugins` directory are internal files, listed at the top of the table, and should not be used as plugins directly.
 
 ## Installation
 
@@ -112,7 +123,7 @@ plugin `finder` can be invoked with the keybind <kbd>;f</kbd>, `fzopen` can be r
 
 Alternatively, combine with <kbd>Alt</kbd> (i.e. <kbd>Alt+key</kbd>).
 
-To pick and run an unassigned plugin, press <kbd>Enter</kbd> (to _enter_ the plugin dir) at the plugin prompt.
+To pick and run an unassigned plugin, press <kbd>Enter</kbd> (to _enter_ the plugin dir) at the plugin prompt. Press <kbd>?</kbd> at the plugin prompt to list available plugins with their descriptions and installation status in a floating window.
 
 To run a plugin at startup, use the option `-P` followed by the plugin key.
 
@@ -122,7 +133,7 @@ If the plugins list gets too long, try breaking them up into sections:
 NNN_PLUG_PERSONAL='g:personal/convert2zoom;p:personal/echo'
 NNN_PLUG_WORK='j:work/prettyjson;d:work/foobar'
 NNN_PLUG_INLINE='e:!go run "$nnn"*'
-NNN_PLUG_DEFAULT='1:ipinfo;p:preview-tui;o:fzz;b:nbak'
+NNN_PLUG_DEFAULT='1:ipinfo;p:preview-tui;o:fzz;r:!ratio | sort -nr > ratio*;b:nbak'
 NNN_PLUG="$NNN_PLUG_PERSONAL;$NNN_PLUG_WORK;$NNN_PLUG_DEFAULT;$NNN_PLUG_INLINE"
 export NNN_PLUG
 ```
@@ -132,8 +143,9 @@ Note:
 - `'b:boom;b:bulknew` will result in only the first definition of *b* (`b:boom`) being used.
 - A keybinding definition of more than 1 character will prevent nnn from starting.
 
+## Plugin modifiers
 
-#### Skip directory refresh after running a plugin [`-`]
+#### [`-`] Skip directory refresh after running a plugin
 
 `nnn` refreshes the directory after running a plugin to reflect any changes by the plugin. To disable this add a `-` before the plugin name:
 
@@ -141,29 +153,15 @@ Note:
 export NNN_PLUG='p:-plugin'
 ```
 
-## Running commands as plugin [`!`]
+#### [`!`] Run commands as plugin
 
 To assign keys to arbitrary non-background cli commands and invoke like plugins, add `!` before the command.
 
 ```sh
-export NNN_PLUG='x:!chmod +x "$nnn";g:!git log;s:!smplayer "$nnn"'
+export NNN_PLUG='x:!chmod +x "$nnn";g:-!git log'
 ```
 
-Now <kbd>;x</kbd> can be used to make a file executable, <kbd>;g</kbd> can be used to the git log of a git project directory, <kbd>;s</kbd> can be used to preview a partially downloaded media file.
-
-#### Skip user confirmation after command execution [`*`]
-
-`nnn` waits for user confirmation (the prompt `Press Enter to continue`) after it executes a command as plugin (unlike plugins which can add a `read` to wait). To skip this, add a `*` after the command.
-
-```sh
-export NNN_PLUG='s:!smplayer "$nnn"*;n:-!vim /home/vaio/Dropbox/Public/synced_note*'
-```
-
-Now there will be no prompt after <kbd>;s</kbd> and <kbd>;n</kbd>.
-
-Note: Do not use `*` with programs that run and exit e.g. cat.
-
-#### Run a GUI app as plugin [`&`]
+#### [`&`] Run a GUI app as plugin
 
 To run a GUI app as plugin, add a `&` after `!`.
 
@@ -171,7 +169,7 @@ To run a GUI app as plugin, add a `&` after `!`.
 export NNN_PLUG='m:-!&mousepad "$nnn"'
 ```
 
-#### Page non-interactive command output [`|`]
+#### [`|`] Page non-interactive command output
 
 To show the output of run-and-exit commands which do not need user input, add `|` (pipe) after `!`.
 
@@ -179,15 +177,37 @@ To show the output of run-and-exit commands which do not need user input, add `|
 export NNN_PLUG='m:-!|mediainfo "$nnn";t:-!|tree -ps;l:-!|ls -lah --group-directories-first'
 ```
 
-This option is incompatible with `&` (terminal output is masked for GUI programs) and ignores `*` (output is already paged for user).
+- incompatible with `&` (terminal output is masked for GUI programs)
+
+#### [`>`] Non-interactive command output in a floating window
+
+To show the output of run-and-exit commands in a floating window, add `>` (right arrow) after `!`.
+
+```sh
+export NNN_PLUG='m:!>mediainfo "$nnn";t:!>tree -ps;l:!>ls -lah --group-directories-first'
+```
+
+- incompatible with `&` (terminal output is masked for GUI programs)
+- ignores `-` (the directory is always refreshed)
+
+#### [`*`] Skip user confirmation after command execution
+
+`nnn` waits for user confirmation (the prompt `Press Enter to continue`) after it executes a command as plugin (unlike plugins which can add a `read` to wait). To skip this, add a `*` after the command.
+
+```sh
+export NNN_PLUG='s:!smplayer "$nnn"*;n:-!vim /home/vaio/Dropbox/Public/synced_note*'
+```
+
+- should be placed at the end of the plugin/command string
+- ignored if `|` is used (output is already paged for user)
+- ignored if `>` is used (output is rendered in a floating window)
+- do not use `*` with programs that run and exit e.g. cat
 
 Notes:
-1. Place `$nnn` (or exported variables) in double quotes (**`"$nnn"`**)
-2. Use single quotes for `$NNN_PLUG` so `"$nnn"` is not interpreted
-3. (_Again_) add `!` before the command
-4. To disable directory refresh after running a _command as plugin_, prefix with `-!`
+1. Place `$nnn` (or exported variables) in double quotes (**`"$nnn"`**).
+2. Use single quotes for `$NNN_PLUG` so that `"$nnn"` is not interpreted.
 
-#### Some useful key-command examples
+## Examples
 
 | Key:Command | Description |
 |---|---|
@@ -249,6 +269,7 @@ The `opcode` indicates the operation type.
 |:---:| --- |
 | `c` | change directory |
 | `l` | list files in list mode |
+| `o` | open file at absolute path |
 | `p` | picker file overwritten |
 
 For convenience, we provided a helper script named `.nnn-plugin-helper` and a function named `nnn_cd` to ease this process. `nnn_cd` receives the path to change to as the first argument, and the context as an optional second argument.
@@ -372,7 +393,7 @@ fi
 
 #### Change directory
 
-    NNN_PLUG='c:!read -r to && [ -n "$to" ] && printf "0c%s" "${to}" > "$NNN_PIPE"*'
+    NNN_PLUG='c:!read -p "full path: " -r to && [ -n "$to" ] && printf "0c%s" "${to}" > "$NNN_PIPE"*'
 
 ## Contributing plugins
 

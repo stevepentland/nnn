@@ -1,3 +1,104 @@
+nnn v5.3 Mai Tai
+2026-08-15
+
+- add native preview pane (<kbd>P</kbd>) with automatic `.npreview` support
+- fuzzy filtering improvements:
+  - scoring, ranking, character arbitration
+  - dimmed matches (works with string filtering also)
+- native prompt - cycle entries in the current directory with <kbd>TAB</kbd>
+- enter a directory that exactly matches the filter with <kbd>/</kbd>
+- support <kbd>Alt-Esc</kbd> to quit a context with or without an active filter
+- optimize ncurses rendering with `leaveok()`
+- lazy-load plugins when requested
+- disable linking libreadline by default; use `make O_NORL=0` to enable it
+- show the runtime bookmarked directory path in the help menu
+- add `O_BENCH` to exit after startup for benchmark runs
+- add `stats` plugin to show complete file information in a pager
+- add `tnp` plugin to open files in a Tmux Neovim pane
+- add Kitty drag-and-drop support to `dragdrop`
+- plugin `nmount` improvements:
+  - unmount all external USB partitions with <kbd>u</kbd>
+  - fill prompt with last input on <kbd>Up</kbd>, clear on <kbd>Down</kbd>
+- clear stale Kitty graphics placements when closing video previews in `preview-tui`
+- use `HOST_CC` and `HOST_CFLAGS` when building the icons generator
+- fix shell quoting in `preview-tabbed`
+- fix context selection and active-tab handling when cycling contexts
+- fix selection-path unescaping during selection edits
+- reconcile off-screen selections correctly before inversion
+- do not automatically enter directories without read permission
+- add safety checks for session header fields
+- support escaping name completions in the native prompt
+- handle arbitrarily long paths when escaping shell arguments
+
+-------------------------------------------------------------------------------
+
+nnn v5.2 Blue Hawaii
+2026-02-14
+
+- enable 8 contexts (saved sessions may no longer be usable, users need to re-create the sessions)
+- massive [du performance improvement](https://github.com/jarun/nnn/wiki/Performance#02-feb-2026)
+- floating window
+  - render file stats (<kbd>f</kbd>) in a navigable floating window
+  - support rendering output of command run as plugin within floating window (prefix `>`)
+- support in order fuzzy search
+- with no selection, allow user input on _Copy here_ or _Move here_ e.g. to copy the system clipboard
+- double confirm when removing more than 10 selected files using `rm`
+- auto-complete hovered file name on pressing <kbd>TAB</kbd> at the end of prompt input
+- fix: scroll down arrow indicator not showing when down arrow is pressed with filter
+- fix: refresh directory after selection edits
+- support PCRE2 compile-in (`make O_PCRE2=1`), remove PCRE1 support (no longer being developed)
+- support jelliz in preview-tui
+- history file for native prompt
+
+-------------------------------------------------------------------------------
+
+nnn v5.1 Moscow Mule
+2025-03-23
+
+- add support for custom trash function
+- remember history of last 16 commands executed in the native prompt in the current session
+- count files from selection file when no file is selected during selection removal
+- show session name in help
+- show current entry in reversed bold
+- show current (non-auto) session name at save session prompt
+- show `F` in the status bar when filter is inactive in _type-to-nav_ mode
+- restore correct filter function on session load, switch filter function on context changes
+- extend xreadline() with some by-word movement
+- added plugins gpgs and gpgv
+- add icon for `lzip` files, more emoji icons
+- suffix the current context number with `*` in help screen
+
+-------------------------------------------------------------------------------
+
+nnn v5.0 Daiquiri
+2024-08-26
+
+- show relative line numbering when jumping (#1808)
+- option `-N` to use native prompt when compiled with libreadline
+- rm improvements
+  - log removed filename
+  - cancel on 'n' or 'N'
+  - show name of the hovered file to be removed
+  - show number of selected files to be removed
+- new keybind <kbd>X</kbd> to force `rm -rf` always (#1811)
+- fix sort order getting changed on context switch (#1757)
+- fix current selection on new file creation, if symlinks exist (#1767)
+- fix filter toggle with mouse click on last 2 rows (#1765)
+- fix file creation (#1864)
+- when handling bookmark, use readlink, not realpath
+- set `$PWD` on directory switch
+- add option `-0` to null-separate file paths in picker mode
+- quitcd.nu (for nushell) now supports modular import (#1806)
+- add _command as plugin_ example to cd to user input directory
+- `cbcopy-mac`, `cbpaste-mac`: plugins for integration with macOS clipboard
+- `fzhist` plugin: add support for zsh history
+- `preview-tui` plugin: support eza as replacement for exa, multiple fixes
+- `preview-tui` plugin: add full svg support (#1865)
+- `preview-tabbed`: show (n)sxiv in thumbnail mode inside "Pictures" directory
+- mpv sixel/kitty support for preview (#1590)
+
+-------------------------------------------------------------------------------
+
 nnn v4.9 Elixir
 2023-08-27
 
